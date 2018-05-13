@@ -18,7 +18,8 @@ public class Server
     public static void main(String[] args) throws IOException 
     {
         
-    	Integer port = new Integer(args[0]);
+    	//Integer port = new Integer(args[0]);
+    	Integer port = new Integer(3998);
 		
 		// server is listening on port 1313
 		ServerSocket serverSocket = null;
@@ -57,7 +58,8 @@ public class Server
                 Thread t = new ClientHandler(clientSocket, dis, dos,robot);
  
                 // Invoking the start() method
-                t.start();
+                //t.start();
+                t.run();
                  
             }
             catch (Exception e){

@@ -19,8 +19,11 @@ public class Client {
 		try {
 			// Scanner scn = new Scanner(System.in);
 
-			String server = args[0];
-			Integer port = new Integer(args[1]);
+			//String server = args[0];
+			//String server = "127.0.0.1";
+			String server = "baryk.fit.cvut.cz";
+			//Integer port = new Integer(args[1]);
+			Integer port = new Integer(3998);
 			
 			// getting localhost ip
 			InetAddress ip = InetAddress.getByName(server);
@@ -43,14 +46,27 @@ public class Client {
 				System.out.println(received);
 				String tosend = null;
 
-				if (received.substring(0, 10).equals("My name is")) {
-					tosend = answerProcessor.processGreeting(received.substring(11));
+				if (received.substring(0, 9).equals("210 Hello")) {
+					//System.out.println("Hola");
+					tosend = answerProcessor.processGreeting("Magdalena");
 					dos.writeUTF(tosend);
 					System.out.println(tosend);
 
 				} else if (received.substring(0, 6).equals("240 OK")) {// 240 OK (12,7)
-					Integer x = new Integer(received.substring(8, 10));
-					Integer y = new Integer(received.substring(11, 12));
+					int comma = 0;
+					int p1=0;
+					int p2=0;
+					for(int i=0;  i<received.length(); i++){
+						if(received.charAt(i)==','){
+							comma = i;
+						}else if(received.charAt(i)=='('){
+							p1= i;
+						}else if(received.charAt(i)==')'){
+							p2=i;
+						}
+					}
+					Integer x = new Integer(received.substring(p1+1, comma));
+					Integer y = new Integer(received.substring(comma+1, p2));
 					tosend = answerProcessor.processOk(x, y);
 					dos.writeUTF(tosend);
 					System.out.println(tosend);
@@ -75,7 +91,7 @@ public class Client {
 			// s.close();
 			// scn.close();
 			// dis.close();
-			// dos.close();
+			//dos.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

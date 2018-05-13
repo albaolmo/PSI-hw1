@@ -44,20 +44,32 @@ public class AnswerProcessor {
 
 		} else { // 2nd case: we already
 			
-			determineOrientation(x, y);
+			if(xList.size()==1){//We received just one the first ok (the coordinates of this ok are kept in the list) and we have just recived the second one 
+				determineFirstOrientation(x,y);
+			}else{
+				determineOrientation(x, y);
+			}
 			
 			if(x==0 && y==0){
 				res = robotName + " PICK UP";
 			}else if (rotate(x, y).equals(true)) { //trying to orientate the robot always to the 0,0
 				res = robotName + " LEFT";
+				if(this.orientation.equals(Orientation.WEST)){
+					this.orientation = Orientation.NORTH;
+				}else if(this.orientation.equals(Orientation.SOUTH)){
+					this.orientation = Orientation.WEST;
+				}else if(this.orientation.equals(Orientation.EAST)){
+					this.orientation = Orientation.SOUTH;
+				}else if(this.orientation.equals(Orientation.NORTH)){
+					this.orientation = Orientation.EAST;
+				}
 			} else {
 				res = robotName + " STEP";
 			}
 		}
 
 		xList.add(x);
-		xList.add(y);
-		
+		yList.add(y);
 		return res;
 
 	}
@@ -120,10 +132,25 @@ public class AnswerProcessor {
 
 		return res;
 	}
+	
+	public void determineFirstOrientation(Integer x, Integer y){
+		int lastX = this.xList.get(xList.size()-1);
+		int lastY = this.yList.get(yList.size()-1);
+			if(x > lastX){
+				this.orientation = Orientation.EAST;
+			}else if(x < lastX){
+				this.orientation = Orientation.WEST;
+			}else if(y > lastY){
+				this.orientation = Orientation.NORTH;
+			}else if(y < lastY){
+				this.orientation = Orientation.SOUTH;
+			}
+		
+	}
 
 	public void determineOrientation(Integer newX, Integer newY) {
-		Integer lastX = this.xList.get(this.xList.size());
-		Integer lastY = this.yList.get(this.yList.size());
+		Integer lastX = this.xList.get(this.xList.size()-1);
+		Integer lastY = this.yList.get(this.yList.size()-1);
 		if (!lastX.equals(newX) && !lastY.equals(newY))
 			if (lastX < newX) {
 				this.orientation = Orientation.EAST;

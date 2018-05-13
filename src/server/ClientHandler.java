@@ -14,11 +14,11 @@ class ClientHandler extends Thread
 {
 	private static final String NAME = "Magdalena";
 	
-	
+	final Robot robot;
     final DataInputStream dis;
     final DataOutputStream dos;
     final Socket clientSocket;
-    final Robot robot;
+    
      
  
     // Constructor
@@ -68,8 +68,8 @@ class ClientHandler extends Thread
                 	toreturn = commandProcessor.processLeft();
                     dos.writeUTF(toreturn);
                 
-                }else if(received.equals(received.substring(0,robot.getName().length()+8).equals(""+robot.getName()+" REPAIR"))){
-                	toreturn = commandProcessor.processRepair(new Integer(received.substring(robot.getName().length()+9)));
+                }else if(received.substring(0,16).equals("Magdalena REPAIR")){
+                	toreturn = commandProcessor.processRepair(new Integer(received.substring(17)));
                     dos.writeUTF(toreturn);
                 
                 }else if(received.equals(""+robot.getName()+" PICK UP")){
@@ -88,6 +88,8 @@ class ClientHandler extends Thread
                 		toreturn.substring(0,3).equals("572")){
                 	 System.out.println("Closing this connection.");
                      this.clientSocket.close();
+                     dos.close();
+                     dis.close();
                      System.out.println("Connection closed");
                      break;
                 	
